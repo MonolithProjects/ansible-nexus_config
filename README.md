@@ -1,8 +1,8 @@
 # Sonatype Nexus Repository Manager configuration (MVP)
 
-[![Galaxy Quality](https://img.shields.io/ansible/quality/57165?style=flat&logo=ansible)](https://galaxy.ansible.com/monolithprojects/nexus_config)
+[![Galaxy Quality](https://img.shields.io/ansible/quality/57180?style=flat&logo=ansible)](https://galaxy.ansible.com/monolithprojects/nexus_config)
 [![Role version](https://img.shields.io/github/v/release/MonolithProjects/ansible-nexus_config)](https://galaxy.ansible.com/monolithprojects/nexus_config)
-[![Role downloads](https://img.shields.io/ansible/role/d/57165)](https://galaxy.ansible.com/monolithprojects/nexus_config)
+[![Role downloads](https://img.shields.io/ansible/role/d/57180)](https://galaxy.ansible.com/monolithprojects/nexus_config)
 <!-- [![GitHub Actions](https://github.com/MonolithProjects/ansible-nexus_config/workflows/molecule%20test/badge.svg?branch=master)](https://github.com/MonolithProjects/ansible-nexus_config/actions) -->
 [![License](https://img.shields.io/github/license/MonolithProjects/ansible-nexus_config)](https://github.com/MonolithProjects/ansible-nexus_config/blob/main/LICENSE)
 
