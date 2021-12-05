@@ -1,7 +1,7 @@
 ---
   galaxy_info:
     author: Michal Muransky
-    role_name: nexus-config
+    role_name: nexus_config
     namespace: monolithprojects
     description: Configure Sonatype Nexus Repository Manager
     company: MonolithProjects

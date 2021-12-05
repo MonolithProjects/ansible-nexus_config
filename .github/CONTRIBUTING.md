@@ -9,7 +9,7 @@ Here is how you can help, a lot of steps are related to GitHub, not specifically
 
 ## 1. Create an issue
 
-When you see some issue or have an idea for improvement, [create an issue](https://github.com/monolithprojects/ansible-nexus-config/issues).
+When you see some issue or have an idea for improvement, [create an issue](https://github.com/monolithprojects/ansible-nexus_config/issues).
 
 ## 2. Fork the project
 
@@ -31,7 +31,7 @@ Install [molecule](https://molecule.readthedocs.io/en/stable/) and run the test:
 
 ```bash
 pip install molecule molecule-docker ansible-lint docker
-cd ansible-nexus-config
+cd ansible-nexus_config
 molecule test
 ```
 
