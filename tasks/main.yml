@@ -38,4 +38,10 @@
 
 - name: User management
   include_tasks: users.yaml
-  with_items: "{{ users }}"
+  no_log: true
+  with_items: "{{ config.users }}"
+
+- name: Blob Stores management
+  include_tasks: stores.yaml
+  no_log: true
+  with_items: "{{ config.stores }}"

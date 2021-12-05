@@ -13,22 +13,31 @@ Currently this role is just an MVP. It supports:
 - [x] Users creation
 - [x] Users update
 - [x] Users deletion
-- [ ] Create role
+- [x] Blob storage (file) creation
+- [x] Blob storage (file) update
+- [x] Blob storage (file) deletion
+- [x] Blob storage (AWS S3) creation
+- [x] Blob storage (AWS S3) update
+- [x] Blob storage (AWS S3) deletion
+- [ ] Blob storage (Azure) creation
+- [ ] Blob storage (Azure) update
+- [ ] Blob storage (Azure) deletion
 - [ ] Repositories creation
 - [ ] Repositories update
 - [ ] Repositories deletion
-- [ ] Blob storage creation
-- [ ] Blob storage update
-- [ ] Blob storage deletion
-...
+- [ ] Roles creation
+- [ ] Roles update
+- [ ] Roles detetion
+- TBD ...
 
 ## Requirements
 
-...
+Ansible >= 2.10
 
 ## Tested on:
 
-...
+- Nexus repository Manager 3.37.0-01
+- Fedora 35
 
 ## Role Variables
 
@@ -55,30 +64,46 @@ api_protocol: http
 # Hide sensitive Ansible error logs (may contain passwords)
 hide_sensitive_logs: true
 
-users: []
-  # - id: joan                    # User ID
-  #   first_name: Joan            # User's first name
-  #   last_name: Doe              # User's last name
-  #   email: joan@example.org     # Email
-  #   password: nbusr123          # Password ( do not push it to git :) )
-  #   status: active              # Status of the user. You can set active/disabled or deleted to delete the user.
-  #   source: default             # Source
-  #   roles:                      # List of the assigned roles
-  #     - nx-admin
-  # - id: joe
-  #   first_name: Joe
-  #   last_name: Doe
-  #   email: joe@example.org
-  #   password: "{{ lookup('env', 'JOE_PASSWORD') }}"
-  #   status: disabled
-  #   source: default
-  #   roles:
-  #     - nx-anonymous
+config:
+
+  users: []
+    # - id: joan                    # User ID
+    #   first_name: Joan            # User's first name
+    #   last_name: Doe              # User's last name
+    #   email: joan@example.org     # Email
+    #   password: nbusr123          # Password ( do not push it to git :) )
+    #   status: active              # Status of the user. You can set active/disabled or deleted to delete the user.
+    #   source: default             # Source
+    #   roles:                      # List of the assigned roles
+    #     - nx-admin
+    # - id: joe
+    #   first_name: Joe
+    #   last_name: Doe
+    #   email: joe@example.org
+    #   password: "{{ lookup('env', 'JOE_PASSWORD') }}"
+    #   status: disabled
+    #   source: default
+    #   roles:
+    #     - nx-anonymous
+
+  stores: []
+    # - name: file_blob             # Blob Store name
+    #   type: file                  # Blob Store type (file, s3)
+    #   soft_quota: 0               # Blob Store quota
+    #   path: /tmp/blobs
+    #   status: active              # Blob Store status (active, deleted)
+    # - name: s3_blog
+    #   type: s3
+    #   soft_quota: 0
+    #   prefix: ""
+    #   region: default
+    #   expiration_days: -1
+    #   status: active
 ```
 
 ## Example Playbook
 
-In this example ...
+In this example the playbook will create two additional Nexus users and one additional Blob Storage.
 
 ```yaml
 ---
@@ -87,25 +112,32 @@ In this example ...
   user: ansible
   become: yes
   vars:
-    users:
-      - id: joan
-        first_name: Joan
-        last_name: Doe
-        email: joan@example.org
-        password: "{{ lookup('env', 'JOAN_PASSWORD') }}"
-        status: active
-        source: default
-        roles:
-          - nx-admin
-      - id: joe
-        first_name: Joe
-        last_name: Doe
-        email: joe@example.org
-        password: nbusr123
-        status: disabled
-        source: default
-        roles:
-          - nx-anonymous
+    config:
+      users:
+        - id: joan
+          first_name: Joan
+          last_name: Doe
+          email: joan@example.org
+          password: "{{ lookup('env', 'JOAN_PASSWORD') }}"
+          status: active
+          source: default
+          roles:
+            - nx-admin
+        - id: joe
+          first_name: Joe
+          last_name: Doe
+          email: joe@example.org
+          password: nbusr123
+          status: disabled
+          source: default
+          roles:
+            - nx-anonymous
+      stores:
+        - name: file_blob
+          type: file
+          soft_quota: 0
+          path: /mydata/blobs
+          status: active
   roles:
     - role: monolithprojects.nexus_config
 ```

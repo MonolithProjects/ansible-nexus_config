@@ -1,8 +1,8 @@
 ---
 
-- name: Check if user "{{ item.id }}" already exist
+- name: Check Blob Store "{{ item.name }}" already exist
   uri:
-    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/users"
+    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/blobstores"
     user: "{{ admin_username }}"
     password: "{{ admin_password }}"
     method: GET
@@ -10,34 +10,34 @@
     force_basic_auth: true
   no_log: "{{ hide_sensitive_logs }}"
   delegate_to: localhost
-  register: existing_users
+  register: existing_stores
 
-- name: Create user "{{ item.id }}"
+- name: Create Blob Store "{{ item.name }}"
   uri:
-    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/users"
+    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/blobstores/{{ item.type }}"
     user: "{{ admin_username }}"
     password: "{{ admin_password }}"
-    body: "{{ lookup('template','user.json.j2') }}"
+    body: "{{ lookup('template','stores_{{ item.type }}.json.j2') }}"
     method: POST
-    status_code: 200
+    status_code: [201, 204]
     force_basic_auth: true
     headers:
       Content-Type: application/json
     body_format: json
   no_log: "{{ hide_sensitive_logs }}"
   register: changes
-  changed_when: changes.status == 200
+  changed_when: changes.status == [201, 204]
   delegate_to: localhost
   when:
     - item.status != "deleted"
-    - item.id not in ( existing_users | community.general.json_query('json[*].userId'))
+    - item.name not in ( existing_stores | community.general.json_query('json[*].name'))
 
-- name: Sync user "{{ item.id }}" setings
+- name: Sync Blob Store "{{ item.name }}" setings
   uri:
-    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/users/{{ item.id }}"
+    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/blobstores/{{ item.type }}/{{ item.name }}"
     user: "{{ admin_username }}"
     password: "{{ admin_password }}"
-    body: "{{ lookup('template','user.json.j2') }}"
+    body: "{{ lookup('template','stores_{{ item.type }}.json.j2') }}"
     method: PUT
     status_code: 204
     force_basic_auth: true
@@ -50,11 +50,11 @@
   delegate_to: localhost
   when:
     - item.status != "deleted"
-    - item.id in ( existing_users | community.general.json_query('json[*].userId'))
+    - item.name in ( existing_stores | community.general.json_query('json[*].name'))
 
-- name: Delete user "{{ item.id }}"
+- name: Delete Blob Store "{{ item.name }}"
   uri:
-    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/users/{{ item.id }}"
+    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/blobstores/{{ item.name }}"
     user: "{{ admin_username }}"
     password: "{{ admin_password }}"
     method: DELETE
@@ -66,4 +66,4 @@
   delegate_to: localhost
   when:
     - item.status == "deleted"
-    - item.id in ( existing_users | community.general.json_query('json[*].userId'))
+    - item.name in ( existing_stores | community.general.json_query('json[*].name'))
