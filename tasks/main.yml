@@ -25,23 +25,48 @@
     url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/users/admin/change-password"
     user: "{{ admin_username }}"
     password: "{{ initial_admin_password }}"
+    body: "{{ admin_password }}"
     method: PUT
     status_code: [200, 204]
     force_basic_auth: true
     headers:
       Content-Type: text/plain
-    body: "{{ admin_password }}"
+  register: changes
+  changed_when: changes.status == [200, 204]
   delegate_to: localhost
   run_once: true
   no_log: "{{ hide_sensitive_logs }}"
   when: initial_check.status == 200
 
+- name: Set Anonymous Access
+  uri:
+    url: "{{ api_protocol }}://{{ ansible_host }}:{{ api_port }}/service/rest/v1/security/anonymous"
+    user: "{{ admin_username }}"
+    password: "{{ admin_password }}"
+    body: "{{ lookup('template','anonymous.json.j2') }}"
+    method: PUT
+    status_code: 200
+    force_basic_auth: true
+    headers:
+      Content-Type: application/json
+    body_format: json
+  register: changes
+  changed_when: changes.status == 200
+  delegate_to: localhost
+  run_once: true
+  no_log: "{{ hide_sensitive_logs }}"
+
 - name: User management
   include_tasks: users.yaml
   no_log: true
-  with_items: "{{ config.users }}"
+  with_items: "{{ users }}"
 
 - name: Blob Stores management
   include_tasks: stores.yaml
   no_log: true
-  with_items: "{{ config.stores }}"
+  with_items: "{{ stores }}"
+
+- name: Repository management (Maven)
+  include_tasks: repositories.yaml
+  no_log: true
+  with_items: "{{ repositories }}"
