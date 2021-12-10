@@ -1,4 +1,5 @@
-# Sonatype Nexus Repository Manager configuration (MVP)
+# Sonatype Nexus Repository Manager configuration
+## DEPRECATED - Please use https://github.com/lablabs/ansible-role-nexus_config
 
 [![Galaxy Quality](https://img.shields.io/ansible/quality/57180?style=flat&logo=ansible)](https://galaxy.ansible.com/monolithprojects/nexus_config)
 [![Role version](https://img.shields.io/github/v/release/MonolithProjects/ansible-nexus_config)](https://galaxy.ansible.com/monolithprojects/nexus_config)
